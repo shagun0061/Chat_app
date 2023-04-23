@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    userName: {
       type: String,
       required: true,
       min: 3,
@@ -20,13 +20,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 8,
     },
-    isAvatarImageSet: {
-      type: Boolean,
-      default: false,
-    },
-    avatarImage: {
+    profilePic: {
       type: String,
-      default: "",
+      default:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvgBWbSH3w-xh3MDUV9ARmjVGaYr5SqRC6fg&usqp=CAU",
+      required: true,
     },
     isAdmin: {
       type: Boolean,
@@ -34,7 +32,7 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestaps: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("chat_user", userSchema);

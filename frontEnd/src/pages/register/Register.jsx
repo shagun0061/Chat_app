@@ -7,11 +7,14 @@ import { registerRoute } from "../../utils/apiRoutes";
 import axios from "axios";
 
 const Register = () => {
+  const [pic, setPic] = useState("");
+
   const [value, setValue] = useState({
     userName: "",
     email: "",
     password: "",
     confirmPassword: "",
+    profilePic: "",
   });
 
   const toastOption = {
@@ -30,15 +33,20 @@ const Register = () => {
   }
 
   const handelFormSubmit = async (event) => {
+     
     event.preventDefault();
     if (FormValidation()) {
-      const { data } = await axios.post(registerRoute, {
-        ...value,
-      });
+      const formdata = new FormData();
+      formdata.append("userName", value.userName);
+      formdata.append("email", value.email);
+      formdata.append("password", value.password);
+      formdata.append("myFile", value.profilePic, value.profilePic.name);
+
+      const { data } = await axios.post(registerRoute, formdata);
       if (data.status == true) {
-        toast(` Register Sucessfull 🥰  `, toastOption);
-        console.log(data.userRes)
-        localStorage.setItem("chat_app_user",JSON.stringify(data.userRes))
+        toast(` Register Sucessfull 🥰`, toastOption);
+        
+        localStorage.setItem("chat_app_user", JSON.stringify(data.userRes));
         setTimeout(() => {
           navigate("/login");
         }, 3000);
@@ -68,6 +76,10 @@ const Register = () => {
     } else {
       return true;
     }
+  }
+
+  function handelpic(event) {
+    setValue({ ...value, profilePic: event.target.files[0] });
   }
   return (
     <div className="box">
@@ -110,6 +122,7 @@ const Register = () => {
           <span>Password</span>
           <i></i>
         </div>
+
         <div className="inputbox">
           <input
             type="password"
@@ -120,6 +133,19 @@ const Register = () => {
             required
           />
           <span>Confirm Password</span>
+          <i></i>
+        </div>
+        <div className="profile_pic">
+          <span>Uplode Profile pic<span className="dot_red">*</span></span>
+          <input
+            type="file"
+            name="profilePic"
+            onChange={(event) => {
+              handelpic(event);
+            }}
+            required
+          />
+
           <i></i>
         </div>
         <div className="links">

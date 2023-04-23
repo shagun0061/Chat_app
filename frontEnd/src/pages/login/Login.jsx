@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -50,7 +50,7 @@ const Login = () => {
         );
         toast("Login Sucessfull 😃", toastOption);
         setTimeout(() => {
-          navigate("/setAvatar");
+          navigate("/");
         }, 3000);
       }
     }
