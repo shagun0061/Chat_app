@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./style.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -50,11 +50,17 @@ const Login = () => {
         );
         toast("Login Sucessfull 😃", toastOption);
         setTimeout(() => {
-          navigate("/");
+          navigate("/setAvatar");
         }, 3000);
       }
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("chat-app-current-user")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="loginBox">

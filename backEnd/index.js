@@ -8,7 +8,8 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth",useRoutes)
+app.use("/api/auth",useRoutes);
+
 app.listen(process.env.PORT, async () => {
   try {
     await connect;
