@@ -1,10 +1,11 @@
 const User = require("../model/userModal");
 const bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
 
 module.exports.register = async (req, res, next) => {
   let profilePic = req.file ? req.file.filename : null;
-  console.log(profilePic)
-  console.log(req.body)
+  console.log(profilePic);
+  console.log(req.body);
   try {
     const { userName, email, password } = req.body;
 
@@ -34,21 +35,46 @@ module.exports.register = async (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
+  const { userName, password } = req.body;
   try {
-    const { userName: userName, password } = req.body;
     const user = await User.findOne({ userName });
-    if (!user)
-      return res.json({ msg: "Incorrect userName or Password", status: false });
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid)
-      return res.json({ msg: "Incorrect userName or Password", status: false });
 
-    let dummy = user._doc;
-    let userRes = { ...dummy, password: "" };
-    return res.json({ status: true, userRes });
+    if (!user) {
+      return res.json({ msg: "Incorrect userName or Password", status: false });
+    }
+    if (!isPasswordValid) {
+      return res.json({ msg: "Incorrect userName or Password", status: false });
+    }
+
+    jwt.sign(
+      { id: user._id, name: user.userName },
+      "shagun",
+      function (err, token) {
+        if (err) {
+          console.log(err, "55");
+          res.send(err);
+        } else {
+          return res.json({ token: token });
+        }
+      }
+    );
   } catch (ex) {
     next(ex);
   }
 };
 
- 
+module.exports.allusers = async (req, res, next) => {
+  console.log(req.user)
+  try {
+    const users = await User.find({
+      $or: [
+        { userName: { $regex: req.body.name, $options: "i" } },
+        { email: { $regex: req.body.name, $options: "i" } },
+      ],
+    }).find({ _id: { $ne: req.user.id } }); 
+    res.send(users);
+  } catch (error) {
+    res.send(error);
+  }
+};

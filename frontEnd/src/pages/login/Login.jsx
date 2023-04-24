@@ -40,14 +40,11 @@ const Login = () => {
     if (formValidation()) {
       let { data } = await axios.post(loginRoute, { ...value });
       console.log(data);
-      if (data.status === false) {
+      if (!data.token) {
         toast.error(data.msg, toastOption);
       }
-      if (data.status === true) {
-        localStorage.setItem(
-          "chat-app-current-user",
-          JSON.stringify(data.userRes)
-        );
+      if (data.token) {
+        localStorage.setItem("Chat_App_User_Token", JSON.stringify(data.token));
         toast("Login Sucessfull 😃", toastOption);
         setTimeout(() => {
           navigate("/");
@@ -57,7 +54,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("chat-app-current-user")) {
+    if (localStorage.getItem("Chat_App_User_Token")) {
       navigate("/");
     }
   }, []);

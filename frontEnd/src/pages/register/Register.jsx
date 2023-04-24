@@ -46,7 +46,7 @@ const Register = () => {
       if (data.status == true) {
         toast(` Register Sucessfull 🥰`, toastOption);
         
-        localStorage.setItem("chat_app_user", JSON.stringify(data.userRes));
+        // localStorage.setItem("chat_app_user", JSON.stringify(data.userRes));
         setTimeout(() => {
           navigate("/login");
         }, 3000);
