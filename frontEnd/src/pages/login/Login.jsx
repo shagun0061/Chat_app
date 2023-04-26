@@ -43,8 +43,10 @@ const Login = () => {
       if (!data.token) {
         toast.error(data.msg, toastOption);
       }
+      
       if (data.token) {
         localStorage.setItem("Chat_App_User_Token", JSON.stringify(data.token));
+        localStorage.setItem("Chat_App_User", JSON.stringify(data.user));
         toast("Login Sucessfull 😃", toastOption);
         setTimeout(() => {
           navigate("/");

@@ -4,8 +4,7 @@ var jwt = require("jsonwebtoken");
 
 module.exports.register = async (req, res, next) => {
   let profilePic = req.file ? req.file.filename : null;
-  console.log(profilePic);
-  console.log(req.body);
+   
   try {
     const { userName, email, password } = req.body;
 
@@ -38,6 +37,7 @@ module.exports.login = async (req, res, next) => {
   const { userName, password } = req.body;
   try {
     const user = await User.findOne({ userName });
+    
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!user) {
@@ -46,7 +46,7 @@ module.exports.login = async (req, res, next) => {
     if (!isPasswordValid) {
       return res.json({ msg: "Incorrect userName or Password", status: false });
     }
-
+    delete user.password;
     jwt.sign(
       { id: user._id, name: user.userName },
       "shagun",
@@ -55,7 +55,7 @@ module.exports.login = async (req, res, next) => {
           console.log(err, "55");
           res.send(err);
         } else {
-          return res.json({ token: token });
+          return res.json({ token: token,user });
         }
       }
     );
